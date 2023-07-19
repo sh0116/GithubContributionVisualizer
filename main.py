@@ -2,17 +2,15 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import seaborn as sns
-import numpy as np
 from datetime import datetime
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from PIL import Image, ImageDraw, ImageFont, ImageColor
 import io, json, requests
 import matplotlib.patches as patches
-
+from flask import Flask, send_file, abort
 
 # You can download a TTF font file and use it
-# Here we use the 'Roboto' font
 font = ImageFont.truetype("font/NotoSans-Regular.ttf", 25)
 
 # Define a custom color map similar to GitHub's contributions graph
@@ -88,7 +86,7 @@ def get_contribution_data(user):
 def crop_to_circle(image):
     # 크기를 가져오고, 정사각형 크기로 조정
     size = (min(image.size),)*2
-    image = image.resize(size, Image.ANTIALIAS)
+    image = image.resize(size, Image.LANCZOS)
 
     # 원형 마스크를 만듭니다
     mask = Image.new('L', size, 0)
@@ -102,8 +100,6 @@ def crop_to_circle(image):
     draw_result.ellipse((0, 0) + size, outline="#c6e48b", width=10)
     
     return result
-
-
 
 def get_user_info(user):
     r = requests.get(f'https://api.github.com/users/{user}')
@@ -137,11 +133,11 @@ def draw_user_info(user_info, contribution_img, consecutive_days):
     d = ImageDraw.Draw(img)
 
     # Draw user info with the selected font
-    user_text = f"{user_info['name']}"
-    d.text((600,100), user_text, fill='black', font=ImageFont.truetype("font/NotoSans-Bold.ttf", 40))
+    input_text = f"{user_info['name']}"
+    d.text((600,100), input_text, fill='black', font=ImageFont.truetype("font/NotoSans-Bold.ttf", 40))
 
-    user_text = f"UserID: {user_info['login']}\nProfile: {user_info['html_url']}\nRepos: {user_info['public_repos']} \nConsecutive commit dates: {consecutive_days}"
-    d.text((600,150), user_text, fill='black', font=ImageFont.truetype("font/NotoSans-Regular.ttf", 25))
+    input_text = f"UserID: {user_info['login']}\nProfile: {user_info['html_url']}\nRepos: {user_info['public_repos']}"
+    d.text((600,150), input_text, fill='black', font=ImageFont.truetype("font/NotoSans-Regular.ttf", 25))
 
     # Get user's profile image
     profile_img = crop_to_circle(get_profile_image(user_info))
@@ -172,6 +168,7 @@ def draw_user_info(user_info, contribution_img, consecutive_days):
 
     return img
 
+'''
 # 사용자 이름 입력 (예: sh0116)
 user = 'sh0116'
 contribution_data = get_contribution_data(user)
@@ -183,3 +180,29 @@ img = draw_user_info(user_info, contribution_img, consecutive_days)
 
 # Save the final image
 img.save('final_output.png')
+
+'''
+
+
+
+# 이전에 제공한 코드는 여기에...
+
+app = Flask(__name__)
+
+@app.route('/contribution/<user>', methods=['GET'])
+def get_contribution_image(user):
+    user = user
+    contribution_data = get_contribution_data(user)
+    contribution_img, consecutive_days = draw_contribution_heatmap(contribution_data)
+    user_info = get_user_info(user)
+    img = draw_user_info(user_info, contribution_img, consecutive_days)
+    
+    byte_io = io.BytesIO()
+    img.save(byte_io, 'PNG')
+    byte_io.seek(0)
+    
+    return send_file(byte_io, mimetype='image/png')
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
