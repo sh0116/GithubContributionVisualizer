@@ -7,6 +7,25 @@ Github 잔디깍기를 위한 Tool
 
 GitHub Contributions API는 Flask로 작성된 간단한 백엔드 API입니다. 이 API는 주어진 GitHub 사용자의 Contribution 기록을 크롤링하여 가시화하고, 이를 이미지로 반환합니다.
 
+# GitHub Contributions API 사용하기
+
+다음 DNS 주소를 통해 본인의 GitHub Contribution을 확인하실 수 있습니다:
+
+```
+http://githubdaily.kro.kr/contribution/<your-github-username>/2000x650
+```
+
+이 주소를 웹 브라우저의 주소창에 입력하면 됩니다. `<your-github-username>` 부분을 본인의 GitHub 사용자 이름으로 바꿔주시면 됩니다.
+
+예를 들어, GitHub 사용자 이름이 "john"인 경우 다음과 같이 입력합니다:
+
+```
+http://githubdaily.kro.kr/contribution/sh0116/2000x650
+해당 주소로 접속하면, GitHub 사용자 "sh0116"의 contribution 기록이 가시화된 이미지를 볼 수 있습니다. 이미지의 가로는 2000px, 세로는 650px 입니다.
+```
+
+
+
 ## 엔드포인트
 
 HTTP GET 요청을 사용하여 사용자의 contribution 기록을 크롤링하고 이미지로 반환하는 엔드포인트는 다음과 같습니다:
