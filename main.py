@@ -189,20 +189,22 @@ img.save('final_output.png')
 
 app = Flask(__name__)
 
-@app.route('/contribution/<user>', methods=['GET'])
-def get_contribution_image(user):
+@app.route('/contribution/<user>/<int:width>x<int:height>', methods=['GET'])
+def get_contribution_image(user, width, height):
     user = user
     contribution_data = get_contribution_data(user)
     contribution_img, consecutive_days = draw_contribution_heatmap(contribution_data)
     user_info = get_user_info(user)
     img = draw_user_info(user_info, contribution_img, consecutive_days)
     
+    # 이미지 크기 변경
+    img = img.resize((width, height))
+    
     byte_io = io.BytesIO()
     img.save(byte_io, 'PNG')
     byte_io.seek(0)
     
     return send_file(byte_io, mimetype='image/png')
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
