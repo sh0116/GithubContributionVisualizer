@@ -1,7 +1,7 @@
 # GithubContributionVisualizer
 Github 잔디깍기를 위한 Tool
 
-[![프로필](http://43.202.17.133:5000/contribution/sh0116/2000x650)](http://43.202.17.133:5000/contribution/sh0116/2000x650)
+[![프로필](http://githubdaily.kro.kr/contribution/sh0116/2000x650)](http://githubdaily.kro.kr/contribution/sh0116/2000x650)
 
 # GitHub Contributions API
 
