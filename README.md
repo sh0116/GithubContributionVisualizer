@@ -9,7 +9,7 @@ GitHub Contributions API는 Flask로 작성된 간단한 백엔드 API입니다.
 
 # Notion에서 사용하는 방법
 관련 이슈를 링크로 걸어놨습니다.
-[ISSUE](https://github.com/sh0116/GithubContributionVisualizer/issues/1#issue-1815367277)
+[ISSUE](https://github.com/sh0116/GithubContributionVisualizer/issues/1#issuecomment-1646388466)
 
 # Github에서 사용하는 방법
 마크다운 형식으로 아래 형식으로 삽입하면됩니다.
